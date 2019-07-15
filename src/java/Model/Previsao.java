@@ -5,18 +5,15 @@
  */
 package Model;
 
-import com.google.gson.annotations.SerializedName;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
- * @author BinLadenBMS
+ * @author Bruno Martins
  */
-public class Previsao implements Serializable {
+public class Previsao {
 
-    @SerializedName("list")
     List<ForCast> list;
 
     public Previsao() {

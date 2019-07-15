@@ -1,12 +1,60 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
     <h:head>
-        <title>Facelet Title</title>
+        <title>Previsão do Tempo</title>
+        <f:metadata>
+            <f:viewAction  action="#{cidadeController.start()}" />
+        </f:metadata>
     </h:head>
     <h:body>
-        Hello from Facelets
+        <h:form id="formularioCadastro">
+            <p:messages autoUpdate="true" closable="true" />
+            <p:ajaxStatus onstart="PF('exibirLoading').show()" onsuccess="PF('exibirLoading').hide()" />
+
+            <p:dialog widgetVar="exibirLoading" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">                   
+                <img src="Imagens/loader.gif" alt="Animação de carregamento"/>
+            </p:dialog>
+
+            <h:panelGrid columns="1">
+                <h:outputText value="Selecione o País:" />
+                <p:selectOneMenu style="width: 350px" filter="true" filterMatchMode="contains" value="#{cidadeController.paisSelecionado}" >
+                    <f:selectItem itemLabel="Selecione" />
+                    <f:selectItems value="#{cidadeController.paisesApi}" var="pais" itemLabel="#{pais.sigla}" itemValue="#{pais.sigla}" />
+                    <p:ajax event="change" listener="#{cidadeController.listarCidades()}" update="formularioCadastro" />
+                </p:selectOneMenu>
+            </h:panelGrid>
+
+            <br/>
+
+            <h:panelGrid columns="1">
+                <h:outputText value="Selecione a Cidade:" />
+                <p:selectOneMenu  style="width: 300px"  filter="true" filterMatchMode="contains" value="#{cidadeController.cidade.cidadeApi.id}" >
+                    <f:selectItem itemLabel="Selecione" />
+                    <f:selectItems value="#{cidadeController.cidadesApi}" var="selectCidade" itemLabel="#{selectCidade.name}" itemValue="#{selectCidade.id}" /> 
+                </p:selectOneMenu>
+            </h:panelGrid>
+            <br/>
+            <h:panelGrid>
+                <p:commandButton style="width: 200px" value="Salvar" action="#{cidadeController.inserirCidade()}" update="formularioCadastro" />
+            </h:panelGrid>
+
+            <p:separator />
+
+            <p:panel header="Cidades Cadastradas">
+                <p:dataTable value="#{cidadeController.cidades}" var="cidade" emptyMessage="Não existem cidades">
+                    <p:column headerText="Nome">
+                        <h:outputText value="#{cidade.cidadeApi.name}" />
+                    </p:column>
+
+                    <p:column  style="text-align: center" headerText="Detalhes da Previsão">
+                        <p:commandLink value="Exibir"  action="#{cidadeController.verificarPrevisao(cidade.cidadeApi.id)}" />                                                    
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+        </h:form>
     </h:body>
 </html>
-

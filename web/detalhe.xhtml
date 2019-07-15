@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Previsão do Tempo</title>
+        <f:metadata>
+            <f:viewParam name="idCidade" value="#{cidadeController.cidadeSelecionada}" />
+            <f:viewAction action="#{cidadeController.carregarDetalhePrevisao()}" />
+        </f:metadata>
+    </h:head>
+    <h:body>
+        <h:form id="formularioCadastro">
+            <p:messages autoUpdate="true" closable="true" />
+            <p:ajaxStatus onstart="PF('exibirLoading').show()" onsuccess="PF('exibirLoading').hide()" />
+
+            <p:dialog widgetVar="exibirLoading" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">                   
+                <img src="Imagens/loader.gif" alt="Animação de carregamento"/>
+            </p:dialog>
+
+            <p:panel header="Previsão do Tempo para cidade de #{cidadeController.cidade.cidadeApi.name}">                
+                <p:commandButton value="Voltar" action="#{cidadeController.paginaInicial}" />              
+                <h:panelGrid>
+                    <br/>
+                    <p:dataTable paginator="true" rows="15" id="previsoes" rowsPerPageTemplate="15,20,30" value="#{cidadeController.previsao.list}" var="previsao">
+                        <p:column style="text-align: center" headerText="Data e Hora" sortBy="#{previsao.dataPrevisao}">                            
+                            <h:outputText value="#{previsao.dataPrevisao}" >
+                                <f:convertDateTime timeZone="America/Sao_Paulo"  pattern="dd/MM/yyyy HH:mm:ss"/>  
+                            </h:outputText>
+                        </p:column>
+                        <p:column style="text-align: center" headerText="Temperatura ºC" sortBy="#{previsao.principal.temp}">                            
+                            <h:outputText value="#{previsao.principal.temp}" />                                                            
+                        </p:column>    
+                        <p:column style="text-align: center" headerText="Temperatura Mínima ºC" sortBy="#{previsao.principal.tempMin}">                            
+                            <h:outputText value="#{previsao.principal.tempMin}" />                                                            
+                        </p:column>  
+                        <p:column style="text-align: center" headerText="Temperatura Máxima ºC" sortBy="#{previsao.principal.tempMax}">                            
+                            <h:outputText value="#{previsao.principal.tempMax}" />                                                            
+                        </p:column>  
+                        <p:column style="text-align: center" headerText="Pressão" sortBy="#{previsao.principal.pressure}">                            
+                            <h:outputText value="#{previsao.principal.pressure}" />                                                            
+                        </p:column> 
+                        <p:column style="text-align: center" headerText="Umidade" sortBy="#{previsao.principal.humidity}">                            
+                            <h:outputText value="#{previsao.principal.humidity}" />                                                            
+                        </p:column>                                                
+                        <p:column style="text-align: center" headerText="Clima" >                                                       
+                            <h:outputText value="#{previsao.clima}" />                            
+                        </p:column> 
+                    </p:dataTable>
+                </h:panelGrid>             
+            </p:panel>
+        </h:form>
+    </h:body>
+</html>
